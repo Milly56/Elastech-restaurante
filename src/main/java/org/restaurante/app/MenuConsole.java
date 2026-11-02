@@ -3,6 +3,7 @@ package org.restaurante.app;
 import org.restaurante.pedido.Pedido;
 import org.restaurante.cardapio.ItemCardapio;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -63,6 +64,18 @@ public class MenuConsole {
         return lerConfirmacao("Retirar " + ingrediente + "? (s/n): ");
     }
 
+    public BigDecimal lerGorjeta() {
+        while (true) {
+            String texto = lerLinha("Gorjeta (0 para nenhuma): ").trim();
+            if (!texto.matches("[0-9]+([.,][0-9]{1,2})?")) {
+                exibirMensagem("Informe um valor não negativo, com até duas casas decimais.");
+                continue;
+            }
+            return new BigDecimal(texto.replace(',', '.'))
+                    .setScale(2, RoundingMode.UNNECESSARY);
+        }
+    }
+
     public int lerOpcaoAdicional() {
         exibirMensagem("\n1. Cheddar: " + FormatadorMoeda.formatar(new BigDecimal("4.00"))
                 + "\n2. Bacon extra: " + FormatadorMoeda.formatar(new BigDecimal("6.00"))
@@ -102,6 +115,14 @@ public class MenuConsole {
         for (String descricao : combinacoes) {
             exibirMensagem("  " + descricao);
         }
+    }
+
+    public void exibirRelatorioGorjetas(
+            int quantidade, BigDecimal gorjetas, BigDecimal totalComGorjetas) {
+        exibirMensagem("Quantidade de gorjetas: " + quantidade);
+        exibirMensagem("Total de gorjetas: " + FormatadorMoeda.formatar(gorjetas));
+        exibirMensagem("Total do dia com gorjetas: "
+                + FormatadorMoeda.formatar(totalComGorjetas));
     }
 
     public void exibirMensagem(String mensagem) { System.out.println(mensagem); }

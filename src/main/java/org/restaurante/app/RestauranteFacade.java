@@ -8,11 +8,15 @@ import org.restaurante.cardapio.ComBaconExtra;
 import org.restaurante.pedido.GerenciadorPedidos;
 import org.restaurante.pedido.Pedido;
 import java.util.Optional;
+import java.util.List;
+import java.math.BigDecimal;
+import org.restaurante.financeiro.Caixa;
 
 public class RestauranteFacade {
     private final MenuConsole menu;
     private final GerenciadorPedidos gerenciador;
     private final LancheFactory fabrica = new LancheFactory();
+    private final Caixa caixa = Caixa.getInstancia();
 
     public RestauranteFacade(MenuConsole menu, GerenciadorPedidos gerenciador) {
         this.menu = menu;
@@ -26,9 +30,7 @@ public class RestauranteFacade {
                 case 2 -> menu.exibirPedidos(gerenciador.listarTodos());
                 case 3 -> modificarPedido();
                 case 4 -> cancelarPedido();
-                case 5 -> menu.exibirFechamento(
-                        gerenciador.calcularTotalVendido(),
-                        gerenciador.consultarCombinacoes());
+                case 5 -> fecharRestaurante();
                 case 6 -> {
                     menu.exibirMensagem("Até logo!");
                     return false;
@@ -47,7 +49,18 @@ public class RestauranteFacade {
         do {
             pedido.adicionarLanche(escolherItem());
         } while (menu.desejaAdicionarOutroItem());
+        caixa.registrarGorjeta(pedido, menu.lerGorjeta());
         menu.exibirMensagem("Pedido registrado com sucesso.");
+    }
+
+    private void fecharRestaurante() {
+        List<Pedido> pedidos = gerenciador.listarTodos();
+        BigDecimal totalVendido = gerenciador.calcularTotalVendido();
+        menu.exibirFechamento(totalVendido, gerenciador.consultarCombinacoes());
+        menu.exibirRelatorioGorjetas(
+                caixa.contarGorjetas(pedidos),
+                caixa.calcularTotalGorjetas(pedidos),
+                caixa.calcularTotalComGorjetas(totalVendido, pedidos));
     }
 
     private ItemCardapio escolherItem() {
