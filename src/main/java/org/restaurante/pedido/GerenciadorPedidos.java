@@ -26,10 +26,18 @@ public class GerenciadorPedidos {
 
     public List<Pedido> listarTodos() { return List.copyOf(pedidos.values()); }
 
+    public void cancelarPedido(long numero) {
+        Pedido pedido = buscarPorNumero(numero).orElseThrow(
+                () -> new IllegalArgumentException("Pedido não encontrado."));
+        pedido.cancelar();
+    }
+
     public BigDecimal calcularTotalVendido() {
         BigDecimal total = new BigDecimal("0.00");
         for (Pedido pedido : pedidos.values()) {
-            total = total.add(pedido.calcularTotal());
+            if (!pedido.isCancelado()) {
+                total = total.add(pedido.calcularTotal());
+            }
         }
         return total;
     }

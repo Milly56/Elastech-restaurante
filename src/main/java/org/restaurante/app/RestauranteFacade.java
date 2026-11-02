@@ -7,6 +7,7 @@ import org.restaurante.cardapio.ComCheddar;
 import org.restaurante.cardapio.ComBaconExtra;
 import org.restaurante.pedido.GerenciadorPedidos;
 import org.restaurante.pedido.Pedido;
+import java.util.Optional;
 
 public class RestauranteFacade {
     private final MenuConsole menu;
@@ -23,8 +24,10 @@ public class RestauranteFacade {
             switch (menu.lerOpcaoPrincipal()) {
                 case 1 -> registrarPedido();
                 case 2 -> menu.exibirPedidos(gerenciador.listarTodos());
-                case 3 -> menu.exibirTotalDoDia(gerenciador.calcularTotalVendido());
-                case 4 -> {
+                case 3 -> modificarPedido();
+                case 4 -> cancelarPedido();
+                case 5 -> menu.exibirTotalDoDia(gerenciador.calcularTotalVendido());
+                case 6 -> {
                     menu.exibirMensagem("Até logo!");
                     return false;
                 }
@@ -52,6 +55,52 @@ public class RestauranteFacade {
         lanche.setComTomate(!menu.desejaRetirarIngrediente("tomate"));
         lanche.setComCebola(!menu.desejaRetirarIngrediente("cebola"));
         return escolherAdicionais(lanche);
+    }
+
+    private Optional<Pedido> localizarPedidoAtivo() {
+        Optional<Pedido> resultado = gerenciador.buscarPorNumero(menu.lerNumeroPedido());
+        if (resultado.isEmpty()) {
+            menu.exibirMensagem("Pedido não encontrado.");
+            return Optional.empty();
+        }
+        if (resultado.get().isCancelado()) {
+            menu.exibirMensagem("Pedido já cancelado.");
+            return Optional.empty();
+        }
+        return resultado;
+    }
+
+    private void modificarPedido() {
+        Optional<Pedido> resultado = localizarPedidoAtivo();
+        if (resultado.isEmpty()) { return; }
+        Pedido pedido = resultado.get();
+        switch (menu.lerOpcaoModificacao()) {
+            case 1 -> pedido.adicionarLanche(escolherItem());
+            case 2 -> {
+                if (!removerItem(pedido)) { return; }
+            }
+            case 3 -> {
+                if (!removerItem(pedido)) { return; }
+                pedido.adicionarLanche(escolherItem());
+            }
+            case 4 -> { return; }
+            default -> throw new IllegalStateException("Modificação não validada.");
+        }
+        menu.exibirMensagem("Pedido atualizado com sucesso.");
+    }
+
+    private boolean removerItem(Pedido pedido) {
+        int indice = menu.lerIndiceItem(pedido);
+        if (indice < 0) { return false; }
+        pedido.removerItem(indice);
+        return true;
+    }
+
+    private void cancelarPedido() {
+        Optional<Pedido> resultado = localizarPedidoAtivo();
+        if (resultado.isEmpty()) { return; }
+        gerenciador.cancelarPedido(resultado.get().getIdentificador());
+        menu.exibirMensagem("Pedido cancelado com sucesso.");
     }
 
     private ItemCardapio escolherAdicionais(ItemCardapio item) {

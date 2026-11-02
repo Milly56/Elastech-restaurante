@@ -9,6 +9,7 @@ public class Pedido {
     private final long identificador;
     private final String cliente;
     private final List<ItemCardapio> itens = new ArrayList<>();
+    private boolean cancelado;
 
     public Pedido(long identificador, String cliente) {
         if (cliente == null || cliente.isBlank()) {
@@ -19,10 +20,28 @@ public class Pedido {
     }
 
     public void adicionarLanche(ItemCardapio item) {
+        validarAtivo();
         if (item == null) {
             throw new IllegalArgumentException("Lanche não pode ser nulo.");
         }
         itens.add(item);
+    }
+
+    public void removerItem(int indice) {
+        validarAtivo();
+        if (indice < 0 || indice >= itens.size()) {
+            throw new IllegalArgumentException("Item inexistente.");
+        }
+        itens.remove(indice);
+    }
+
+    public void cancelar() { cancelado = true; }
+    public boolean isCancelado() { return cancelado; }
+
+    private void validarAtivo() {
+        if (cancelado) {
+            throw new IllegalStateException("Pedido cancelado não pode ser modificado.");
+        }
     }
 
     public List<ItemCardapio> consultarItens() { return List.copyOf(itens); }

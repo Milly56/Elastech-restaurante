@@ -15,8 +15,39 @@ public class MenuConsole {
 
     public int lerOpcaoPrincipal() {
         exibirMensagem("\n1. Registrar novo pedido\n2. Listar pedidos do dia"
-                + "\n3. Fechar restaurante\n4. Sair");
-        return lerOpcao("Opção: ", 4);
+                + "\n3. Modificar pedido\n4. Cancelar pedido"
+                + "\n5. Fechar restaurante\n6. Sair");
+        return lerOpcao("Opção: ", 6);
+    }
+
+    public long lerNumeroPedido() {
+        while (true) {
+            try {
+                long numero = Long.parseLong(lerLinha("Número do pedido: ").trim());
+                if (numero > 0) { return numero; }
+                exibirMensagem("Informe um número de pedido positivo.");
+            } catch (NumberFormatException e) {
+                exibirMensagem("Digite um número inteiro válido.");
+            }
+        }
+    }
+
+    public int lerOpcaoModificacao() {
+        exibirMensagem("\n1. Acrescentar item\n2. Remover item"
+                + "\n3. Trocar item\n4. Voltar");
+        return lerOpcao("Modificação: ", 4);
+    }
+
+    public int lerIndiceItem(Pedido pedido) {
+        List<ItemCardapio> itens = pedido.consultarItens();
+        if (itens.isEmpty()) {
+            exibirMensagem("O pedido não possui itens.");
+            return -1;
+        }
+        for (int indice = 0; indice < itens.size(); indice++) {
+            exibirMensagem((indice + 1) + ". " + itens.get(indice).getDescricao());
+        }
+        return lerOpcao("Item a retirar: ", itens.size()) - 1;
     }
 
     public String lerNomeCliente() {
@@ -60,7 +91,8 @@ public class MenuConsole {
         if (pedidos.isEmpty()) { exibirMensagem("Nenhum pedido registrado."); }
         for (Pedido pedido : pedidos) {
             exibirMensagem("Pedido " + pedido.getIdentificador()
-                    + " | Cliente: " + pedido.getCliente());
+                    + " | Cliente: " + pedido.getCliente()
+                    + (pedido.isCancelado() ? " | CANCELADO" : " | ATIVO"));
             for (ItemCardapio item : pedido.consultarItens()) {
                 exibirMensagem("  " + item.getDescricao() + " - " + moeda.format(item.getPreco()));
             }
