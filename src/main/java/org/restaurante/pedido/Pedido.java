@@ -1,6 +1,6 @@
 package org.restaurante.pedido;
 
-import org.restaurante.cardapio.Lanche;
+import org.restaurante.cardapio.ItemCardapio;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public class Pedido {
     private final long identificador;
     private final String cliente;
-    private final List<Lanche> lanches = new ArrayList<>();
+    private final List<ItemCardapio> itens = new ArrayList<>();
 
     public Pedido(long identificador, String cliente) {
         if (cliente == null || cliente.isBlank()) {
@@ -18,21 +18,21 @@ public class Pedido {
         this.cliente = cliente.trim();
     }
 
-    public void adicionarLanche(Lanche lanche) {
-        if (lanche == null) {
+    public void adicionarLanche(ItemCardapio item) {
+        if (item == null) {
             throw new IllegalArgumentException("Lanche não pode ser nulo.");
         }
-        lanches.add(lanche);
+        itens.add(item);
     }
 
-    public List<Lanche> consultarItens() { return List.copyOf(lanches); }
+    public List<ItemCardapio> consultarItens() { return List.copyOf(itens); }
     public long getIdentificador() { return identificador; }
     public String getCliente() { return cliente; }
 
     public BigDecimal calcularTotal() {
         BigDecimal total = new BigDecimal("0.00");
-        for (Lanche lanche : lanches) {
-            total = total.add(lanche.getPreco());
+        for (ItemCardapio item : itens) {
+            total = total.add(item.getPreco());
         }
         return total;
     }

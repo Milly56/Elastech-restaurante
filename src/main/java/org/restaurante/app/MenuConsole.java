@@ -1,7 +1,7 @@
 package org.restaurante.app;
 
 import org.restaurante.pedido.Pedido;
-import org.restaurante.cardapio.Lanche;
+import org.restaurante.cardapio.ItemCardapio;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
@@ -47,8 +47,8 @@ public class MenuConsole {
         for (Pedido pedido : pedidos) {
             exibirMensagem("Pedido " + pedido.getIdentificador()
                     + " | Cliente: " + pedido.getCliente());
-            for (Lanche lanche : pedido.consultarItens()) {
-                exibirMensagem("  " + lanche.getNome() + " - " + moeda.format(lanche.getPreco()));
+            for (ItemCardapio item : pedido.consultarItens()) {
+                exibirMensagem("  " + item.getDescricao() + " - " + moeda.format(item.getPreco()));
             }
             exibirMensagem("Valor do pedido: " + moeda.format(pedido.calcularTotal()));
         }
