@@ -22,15 +22,7 @@ public class MenuConsole {
     }
 
     public long lerNumeroPedido() {
-        while (true) {
-            try {
-                long numero = Long.parseLong(lerLinha("Número do pedido: ").trim());
-                if (numero > 0) { return numero; }
-                exibirMensagem("Informe um número de pedido positivo.");
-            } catch (NumberFormatException e) {
-                exibirMensagem("Digite um número inteiro válido.");
-            }
-        }
+        return lerNumeroPositivo("Número do pedido: ", Long.MAX_VALUE);
     }
 
     public int lerOpcaoModificacao() {
@@ -116,11 +108,15 @@ public class MenuConsole {
     public void exibirMensagem(String mensagem) { System.out.println(mensagem); }
 
     private int lerOpcao(String mensagem, int limite) {
+        return (int) lerNumeroPositivo(mensagem, limite);
+    }
+
+    private long lerNumeroPositivo(String mensagem, long limite) {
         while (true) {
             try {
-                int opcao = Integer.parseInt(lerLinha(mensagem).trim());
-                if (opcao >= 1 && opcao <= limite) { return opcao; }
-                exibirMensagem("Opção inexistente.");
+                long numero = Long.parseLong(lerLinha(mensagem).trim());
+                if (numero >= 1 && numero <= limite) { return numero; }
+                exibirMensagem("Opção inexistente. Informe um número de 1 a " + limite + ".");
             } catch (NumberFormatException e) {
                 exibirMensagem("Digite um número inteiro válido.");
             }
