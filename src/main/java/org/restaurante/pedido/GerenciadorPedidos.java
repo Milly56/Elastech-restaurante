@@ -2,9 +2,12 @@ package org.restaurante.pedido;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import org.restaurante.cardapio.ItemCardapio;
 
 public class GerenciadorPedidos {
     private final Map<Long, Pedido> pedidos = new HashMap<>();
@@ -40,5 +43,17 @@ public class GerenciadorPedidos {
             }
         }
         return total;
+    }
+
+    public Set<String> consultarCombinacoes() {
+        Set<String> combinacoes = new HashSet<>();
+        for (Pedido pedido : pedidos.values()) {
+            if (!pedido.isCancelado()) {
+                for (ItemCardapio item : pedido.consultarItens()) {
+                    combinacoes.add(item.getDescricao());
+                }
+            }
+        }
+        return Set.copyOf(combinacoes);
     }
 }

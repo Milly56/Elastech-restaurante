@@ -7,6 +7,7 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.Set;
 
 public class MenuConsole {
     private final Scanner entrada = new Scanner(System.in);
@@ -102,6 +103,14 @@ public class MenuConsole {
 
     public void exibirTotalDoDia(BigDecimal total) {
         exibirMensagem("Total do dia: " + moeda.format(total));
+    }
+
+    public void exibirFechamento(BigDecimal total, Set<String> combinacoes) {
+        exibirTotalDoDia(total);
+        exibirMensagem("Combinações diferentes: " + combinacoes.size());
+        for (String descricao : combinacoes) {
+            exibirMensagem("  " + descricao);
+        }
     }
 
     public void exibirMensagem(String mensagem) { System.out.println(mensagem); }

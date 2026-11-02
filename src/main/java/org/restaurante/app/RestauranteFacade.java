@@ -26,7 +26,9 @@ public class RestauranteFacade {
                 case 2 -> menu.exibirPedidos(gerenciador.listarTodos());
                 case 3 -> modificarPedido();
                 case 4 -> cancelarPedido();
-                case 5 -> menu.exibirTotalDoDia(gerenciador.calcularTotalVendido());
+                case 5 -> menu.exibirFechamento(
+                        gerenciador.calcularTotalVendido(),
+                        gerenciador.consultarCombinacoes());
                 case 6 -> {
                     menu.exibirMensagem("Até logo!");
                     return false;
