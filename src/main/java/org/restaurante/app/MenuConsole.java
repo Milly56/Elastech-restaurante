@@ -37,6 +37,10 @@ public class MenuConsole {
         return lerConfirmacao("Adicionar outro item? (s/n): ");
     }
 
+    public boolean desejaRetirarIngrediente(String ingrediente) {
+        return lerConfirmacao("Retirar " + ingrediente + "? (s/n): ");
+    }
+
     public int lerOpcaoAdicional() {
         exibirMensagem("\n1. Cheddar: R$ 4,00\n2. Bacon extra: R$ 6,00"
                 + "\n3. Finalizar lanche sem mais adicionais");

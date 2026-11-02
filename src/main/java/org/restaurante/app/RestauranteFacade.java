@@ -1,6 +1,7 @@
 package org.restaurante.app;
 
 import org.restaurante.cardapio.LancheFactory;
+import org.restaurante.cardapio.Lanche;
 import org.restaurante.cardapio.ItemCardapio;
 import org.restaurante.cardapio.ComCheddar;
 import org.restaurante.cardapio.ComBaconExtra;
@@ -39,10 +40,18 @@ public class RestauranteFacade {
     private void registrarPedido() {
         Pedido pedido = gerenciador.criarPedido(menu.lerNomeCliente());
         do {
-            ItemCardapio item = fabrica.criarLanche(menu.lerOpcaoLanche());
-            pedido.adicionarLanche(escolherAdicionais(item));
+            pedido.adicionarLanche(escolherItem());
         } while (menu.desejaAdicionarOutroItem());
         menu.exibirMensagem("Pedido registrado com sucesso.");
+    }
+
+    private ItemCardapio escolherItem() {
+        Lanche lanche = fabrica.criarLanche(menu.lerOpcaoLanche());
+        lanche.setComQueijo(!menu.desejaRetirarIngrediente("queijo"));
+        lanche.setComAlface(!menu.desejaRetirarIngrediente("alface"));
+        lanche.setComTomate(!menu.desejaRetirarIngrediente("tomate"));
+        lanche.setComCebola(!menu.desejaRetirarIngrediente("cebola"));
+        return escolherAdicionais(lanche);
     }
 
     private ItemCardapio escolherAdicionais(ItemCardapio item) {
