@@ -34,8 +34,18 @@ public class MenuConsole {
     }
 
     public boolean desejaAdicionarOutroItem() {
+        return lerConfirmacao("Adicionar outro item? (s/n): ");
+    }
+
+    public int lerOpcaoAdicional() {
+        exibirMensagem("\n1. Cheddar: R$ 4,00\n2. Bacon extra: R$ 6,00"
+                + "\n3. Finalizar lanche sem mais adicionais");
+        return lerOpcao("Escolha o adicional: ", 3);
+    }
+
+    private boolean lerConfirmacao(String mensagem) {
         while (true) {
-            String resposta = lerLinha("Adicionar outro item? (s/n): ").trim();
+            String resposta = lerLinha(mensagem).trim();
             if (resposta.equalsIgnoreCase("s")) { return true; }
             if (resposta.equalsIgnoreCase("n")) { return false; }
             exibirMensagem("Digite s ou n.");

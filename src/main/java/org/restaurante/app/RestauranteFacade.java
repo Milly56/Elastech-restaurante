@@ -1,6 +1,9 @@
 package org.restaurante.app;
 
 import org.restaurante.cardapio.LancheFactory;
+import org.restaurante.cardapio.ItemCardapio;
+import org.restaurante.cardapio.ComCheddar;
+import org.restaurante.cardapio.ComBaconExtra;
 import org.restaurante.pedido.GerenciadorPedidos;
 import org.restaurante.pedido.Pedido;
 
@@ -36,8 +39,20 @@ public class RestauranteFacade {
     private void registrarPedido() {
         Pedido pedido = gerenciador.criarPedido(menu.lerNomeCliente());
         do {
-            pedido.adicionarLanche(fabrica.criarLanche(menu.lerOpcaoLanche()));
+            ItemCardapio item = fabrica.criarLanche(menu.lerOpcaoLanche());
+            pedido.adicionarLanche(escolherAdicionais(item));
         } while (menu.desejaAdicionarOutroItem());
         menu.exibirMensagem("Pedido registrado com sucesso.");
+    }
+
+    private ItemCardapio escolherAdicionais(ItemCardapio item) {
+        while (true) {
+            switch (menu.lerOpcaoAdicional()) {
+                case 1 -> item = new ComCheddar(item);
+                case 2 -> item = new ComBaconExtra(item);
+                case 3 -> { return item; }
+                default -> throw new IllegalStateException("Adicional não validado.");
+            }
+        }
     }
 }
