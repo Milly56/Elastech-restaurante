@@ -1,7 +1,6 @@
 package org.restaurante.pedido;
 
 import org.restaurante.cardapio.ItemCardapio;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.restaurante.util.Validacoes;
@@ -46,10 +45,10 @@ public class Pedido {
     public long getIdentificador() { return identificador; }
     public String getCliente() { return cliente; }
 
-    public BigDecimal calcularTotal() {
-        BigDecimal total = new BigDecimal("0.00");
+    public double calcularTotal() {
+        double total = 0.00;
         for (ItemCardapio item : itens) {
-            total = total.add(item.getPreco());
+            total += item.getPreco();
         }
         return total;
     }

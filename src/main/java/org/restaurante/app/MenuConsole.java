@@ -2,8 +2,6 @@ package org.restaurante.app;
 
 import org.restaurante.pedido.Pedido;
 import org.restaurante.cardapio.ItemCardapio;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
@@ -50,9 +48,9 @@ public class MenuConsole {
     }
 
     public int lerOpcaoLanche() {
-        exibirMensagem("\n1. X-Burger: " + FormatadorMoeda.formatar(new BigDecimal("16.00"))
-                + "\n2. X-Salada: " + FormatadorMoeda.formatar(new BigDecimal("18.00"))
-                + "\n3. X-Bacon: " + FormatadorMoeda.formatar(new BigDecimal("22.00")));
+        exibirMensagem("\n1. X-Burger: " + FormatadorMoeda.formatar(16.00)
+                + "\n2. X-Salada: " + FormatadorMoeda.formatar(18.00)
+                + "\n3. X-Bacon: " + FormatadorMoeda.formatar(22.00));
         return lerOpcao("Escolha o lanche: ", 3);
     }
 
@@ -64,21 +62,24 @@ public class MenuConsole {
         return lerConfirmacao("Retirar " + ingrediente + "? (s/n): ");
     }
 
-    public BigDecimal lerGorjeta() {
+    public double lerGorjeta() {
         while (true) {
             String texto = lerLinha("Gorjeta (0 para nenhuma): ").trim();
             if (!texto.matches("[0-9]+([.,][0-9]{1,2})?")) {
                 exibirMensagem("Informe um valor não negativo, com até duas casas decimais.");
                 continue;
             }
-            return new BigDecimal(texto.replace(',', '.'))
-                    .setScale(2, RoundingMode.UNNECESSARY);
+            double valor = Double.parseDouble(texto.replace(',', '.'));
+            if (Double.isFinite(valor)) {
+                return valor;
+            }
+            exibirMensagem("Valor muito alto. Informe outro valor.");
         }
     }
 
     public int lerOpcaoAdicional() {
-        exibirMensagem("\n1. Cheddar: " + FormatadorMoeda.formatar(new BigDecimal("4.00"))
-                + "\n2. Bacon extra: " + FormatadorMoeda.formatar(new BigDecimal("6.00"))
+        exibirMensagem("\n1. Cheddar: " + FormatadorMoeda.formatar(4.00)
+                + "\n2. Bacon extra: " + FormatadorMoeda.formatar(6.00)
                 + "\n3. Finalizar lanche sem mais adicionais");
         return lerOpcao("Escolha o adicional: ", 3);
     }
@@ -105,11 +106,11 @@ public class MenuConsole {
         }
     }
 
-    public void exibirTotalDoDia(BigDecimal total) {
+    public void exibirTotalDoDia(double total) {
         exibirMensagem("Total do dia: " + FormatadorMoeda.formatar(total));
     }
 
-    public void exibirFechamento(BigDecimal total, Set<String> combinacoes) {
+    public void exibirFechamento(double total, Set<String> combinacoes) {
         exibirTotalDoDia(total);
         exibirMensagem("Combinações diferentes: " + combinacoes.size());
         for (String descricao : combinacoes) {
@@ -118,7 +119,7 @@ public class MenuConsole {
     }
 
     public void exibirRelatorioGorjetas(
-            int quantidade, BigDecimal gorjetas, BigDecimal totalComGorjetas) {
+            int quantidade, double gorjetas, double totalComGorjetas) {
         exibirMensagem("Quantidade de gorjetas: " + quantidade);
         exibirMensagem("Total de gorjetas: " + FormatadorMoeda.formatar(gorjetas));
         exibirMensagem("Total do dia com gorjetas: "

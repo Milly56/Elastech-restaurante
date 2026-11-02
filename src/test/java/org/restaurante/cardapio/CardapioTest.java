@@ -1,7 +1,6 @@
 package org.restaurante.cardapio;
 
 import org.junit.jupiter.api.Test;
-import java.math.BigDecimal;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,25 +10,25 @@ class CardapioTest {
     @Test
     void rejeitaPrecoNegativoNoConstrutorENoSetter() {
         assertThrows(IllegalArgumentException.class,
-                () -> new Lanche("X-Burger", new BigDecimal("-1.00")));
+                () -> new Lanche("X-Burger", -1.00));
         Lanche lanche = fabrica.criarLanche(1);
         assertThrows(IllegalArgumentException.class,
-                () -> lanche.setPreco(new BigDecimal("-1.00")));
-        assertEquals(new BigDecimal("16.00"), lanche.getPreco());
+                () -> lanche.setPreco(-1.00));
+        assertEquals(16.00, lanche.getPreco(), 0.000001);
     }
 
     @Test
     void rejeitaNomeInvalido() {
         for (String nome : new String[]{null, "", "   "}) {
             assertThrows(IllegalArgumentException.class,
-                    () -> new Lanche(nome, new BigDecimal("16.00")));
+                    () -> new Lanche(nome, 16.00));
         }
     }
 
     @Test
     void encadeiaCheddarEBaconExtra() {
         ItemCardapio item = new ComBaconExtra(new ComCheddar(fabrica.criarLanche(3)));
-        assertEquals(new BigDecimal("32.00"), item.getPreco());
+        assertEquals(32.00, item.getPreco(), 0.000001);
         assertEquals("X-Bacon + cheddar + bacon extra", item.getDescricao());
     }
 
@@ -39,9 +38,9 @@ class CardapioTest {
         Lanche segundo = fabrica.criarLanche(1);
         assertNotSame(primeiro, segundo);
         primeiro.setNome("Personalizado");
-        primeiro.setPreco(new BigDecimal("20.00"));
+        primeiro.setPreco(20.00);
         assertEquals("X-Burger", segundo.getNome());
-        assertEquals(new BigDecimal("16.00"), segundo.getPreco());
+        assertEquals(16.00, segundo.getPreco(), 0.000001);
     }
 
     @Test

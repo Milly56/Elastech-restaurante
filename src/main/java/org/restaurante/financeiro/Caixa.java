@@ -1,6 +1,5 @@
 package org.restaurante.financeiro;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,12 +13,12 @@ public final class Caixa {
 
     public static Caixa getInstancia() { return INSTANCIA; }
 
-    public void registrarGorjeta(Pedido pedido, BigDecimal valor) {
+    public void registrarGorjeta(Pedido pedido, double valor) {
         if (pedido == null || pedido.isCancelado()) {
             throw new IllegalArgumentException("Informe um pedido ativo.");
         }
         Transacao transacao = new Transacao(pedido.getIdentificador(), valor);
-        if (transacao.getValor().signum() > 0) {
+        if (transacao.getValor() > 0) {
             transacoes.add(transacao);
         }
     }
@@ -44,16 +43,16 @@ public final class Caixa {
         return consultarGorjetasAtivas(pedidos).size();
     }
 
-    public BigDecimal calcularTotalGorjetas(Collection<Pedido> pedidos) {
-        BigDecimal total = new BigDecimal("0.00");
+    public double calcularTotalGorjetas(Collection<Pedido> pedidos) {
+        double total = 0.00;
         for (Transacao transacao : consultarGorjetasAtivas(pedidos)) {
-            total = total.add(transacao.getValor());
+            total += transacao.getValor();
         }
         return total;
     }
 
-    public BigDecimal calcularTotalComGorjetas(
-            BigDecimal totalVendido, Collection<Pedido> pedidos) {
-        return totalVendido.add(calcularTotalGorjetas(pedidos));
+    public double calcularTotalComGorjetas(
+            double totalVendido, Collection<Pedido> pedidos) {
+        return totalVendido + calcularTotalGorjetas(pedidos);
     }
 }

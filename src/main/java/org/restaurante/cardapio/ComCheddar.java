@@ -1,6 +1,5 @@
 package org.restaurante.cardapio;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class ComCheddar implements ItemCardapio {
@@ -14,7 +13,7 @@ public class ComCheddar implements ItemCardapio {
     public String getDescricao() { return item.getDescricao() + " + cheddar"; }
 
     @Override
-    public BigDecimal getPreco() {
-        return item.getPreco().add(new BigDecimal("4.00"));
+    public double getPreco() {
+        return item.getPreco() + 4.00;
     }
 }

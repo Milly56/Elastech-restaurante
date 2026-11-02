@@ -1,23 +1,22 @@
 package org.restaurante.cardapio;
 
-import java.math.BigDecimal;
 import java.util.List;
 import org.restaurante.util.Validacoes;
 
 public class Lanche implements ItemCardapio {
     private String nome;
-    private BigDecimal preco;
+    private double preco;
     private final List<String> ingredientes;
     private boolean comQueijo = true;
     private boolean comAlface = true;
     private boolean comTomate = true;
     private boolean comCebola = true;
 
-    public Lanche(String nome, BigDecimal preco) {
+    public Lanche(String nome, double preco) {
         this(nome, preco, List.of());
     }
 
-    public Lanche(String nome, BigDecimal preco, List<String> ingredientes) {
+    public Lanche(String nome, double preco, List<String> ingredientes) {
         setNome(nome);
         setPreco(preco);
         this.ingredientes = List.copyOf(ingredientes);
@@ -34,7 +33,7 @@ public class Lanche implements ItemCardapio {
         return descricao;
     }
     @Override
-    public BigDecimal getPreco() { return preco; }
+    public double getPreco() { return preco; }
     public List<String> getIngredientes() { return ingredientes; }
     public boolean isComQueijo() { return comQueijo; }
     public void setComQueijo(boolean comQueijo) { this.comQueijo = comQueijo; }
@@ -49,9 +48,9 @@ public class Lanche implements ItemCardapio {
         this.nome = Validacoes.textoNaoVazio(nome, "Nome do lanche");
     }
 
-    public void setPreco(BigDecimal preco) {
-        if (preco == null || preco.signum() < 0) {
-            throw new IllegalArgumentException("Preço deve ser informado e não pode ser negativo.");
+    public void setPreco(double preco) {
+        if (!Double.isFinite(preco) || preco < 0) {
+            throw new IllegalArgumentException("Preço deve ser finito e não pode ser negativo.");
         }
         this.preco = preco;
     }

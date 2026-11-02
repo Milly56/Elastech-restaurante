@@ -7,7 +7,6 @@ public class Main {
         RestauranteFacade fachada = new RestauranteFacade(
                 new MenuConsole(), new GerenciadorPedidos());
         while (fachada.executarProximaOperacao()) {
-            // Mantém o fluxo principal até a saída.
         }
     }
 }

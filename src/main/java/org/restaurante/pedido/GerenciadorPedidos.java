@@ -1,6 +1,5 @@
 package org.restaurante.pedido;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,11 +34,11 @@ public class GerenciadorPedidos {
         pedido.cancelar();
     }
 
-    public BigDecimal calcularTotalVendido() {
-        BigDecimal total = new BigDecimal("0.00");
+    public double calcularTotalVendido() {
+        double total = 0.00;
         for (Pedido pedido : pedidos.values()) {
             if (!pedido.isCancelado()) {
-                total = total.add(pedido.calcularTotal());
+                total += pedido.calcularTotal();
             }
         }
         return total;

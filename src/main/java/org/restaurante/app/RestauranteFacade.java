@@ -9,7 +9,6 @@ import org.restaurante.pedido.GerenciadorPedidos;
 import org.restaurante.pedido.Pedido;
 import java.util.Optional;
 import java.util.List;
-import java.math.BigDecimal;
 import org.restaurante.financeiro.Caixa;
 
 public class RestauranteFacade {
@@ -55,7 +54,7 @@ public class RestauranteFacade {
 
     private void fecharRestaurante() {
         List<Pedido> pedidos = gerenciador.listarTodos();
-        BigDecimal totalVendido = gerenciador.calcularTotalVendido();
+        double totalVendido = gerenciador.calcularTotalVendido();
         menu.exibirFechamento(totalVendido, gerenciador.consultarCombinacoes());
         menu.exibirRelatorioGorjetas(
                 caixa.contarGorjetas(pedidos),

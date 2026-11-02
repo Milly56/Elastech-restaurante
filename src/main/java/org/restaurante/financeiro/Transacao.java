@@ -1,32 +1,30 @@
 package org.restaurante.financeiro;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 public final class Transacao {
     private final long numeroPedido;
-    private final BigDecimal valor;
+    private final double valor;
 
-    public Transacao(long numeroPedido, BigDecimal valor) {
+    public Transacao(long numeroPedido, double valor) {
         if (numeroPedido <= 0) {
             throw new IllegalArgumentException("Número do pedido deve ser positivo.");
         }
-        if (valor == null || valor.signum() < 0) {
-            throw new IllegalArgumentException("Valor deve ser informado e não pode ser negativo.");
+        if (!Double.isFinite(valor) || valor < 0) {
+            throw new IllegalArgumentException("Valor deve ser finito e não pode ser negativo.");
         }
         this.numeroPedido = numeroPedido;
-        this.valor = valor.setScale(2, RoundingMode.UNNECESSARY);
+        this.valor = valor == 0.0 ? 0.0 : valor;
     }
 
     public long getNumeroPedido() { return numeroPedido; }
-    public BigDecimal getValor() { return valor; }
+    public double getValor() { return valor; }
 
     @Override
     public boolean equals(Object objeto) {
         if (this == objeto) { return true; }
         if (!(objeto instanceof Transacao outra)) { return false; }
-        return numeroPedido == outra.numeroPedido && valor.equals(outra.valor);
+        return numeroPedido == outra.numeroPedido && Double.compare(valor, outra.valor) == 0;
     }
 
     @Override

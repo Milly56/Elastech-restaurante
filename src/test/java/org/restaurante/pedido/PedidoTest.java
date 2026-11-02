@@ -2,11 +2,10 @@ package org.restaurante.pedido;
 
 import org.junit.jupiter.api.Test;
 import org.restaurante.cardapio.*;
-import java.math.BigDecimal;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
-class NivelTresTest {
+class PedidoTest {
     private final LancheFactory fabrica = new LancheFactory();
 
     @Test
@@ -22,11 +21,11 @@ class NivelTresTest {
         lanche.setComAlface(false);
         lanche.setComQueijo(false);
         assertEquals("X-Bacon sem queijo sem alface sem tomate sem cebola", lanche.getDescricao());
-        assertEquals(new BigDecimal("22.00"), lanche.getPreco());
+        assertEquals(22.00, lanche.getPreco(), 0.000001);
         ItemCardapio completo = new ComBaconExtra(new ComCheddar(lanche));
         assertEquals("X-Bacon sem queijo sem alface sem tomate sem cebola + cheddar + bacon extra",
                 completo.getDescricao());
-        assertEquals(new BigDecimal("32.00"), completo.getPreco());
+        assertEquals(32.00, completo.getPreco(), 0.000001);
         lanche.setComQueijo(true);
         assertFalse(lanche.getDescricao().contains("sem queijo"));
     }
@@ -58,7 +57,7 @@ class NivelTresTest {
         ativo.adicionarLanche(fabrica.criarLanche(1));
         gerenciador.cancelarPedido(cancelado.getIdentificador());
         assertTrue(cancelado.isCancelado());
-        assertEquals(new BigDecimal("16.00"), gerenciador.calcularTotalVendido());
+        assertEquals(16.00, gerenciador.calcularTotalVendido(), 0.000001);
         assertEquals(Set.of("X-Burger"), gerenciador.consultarCombinacoes());
         assertSame(cancelado, gerenciador.buscarPorNumero(1).orElseThrow());
         assertEquals(3, gerenciador.criarPedido("Caio").getIdentificador());
@@ -74,14 +73,14 @@ class NivelTresTest {
         Pedido pedido = gerenciador.criarPedido("Ana");
         pedido.adicionarLanche(fabrica.criarLanche(1));
         pedido.adicionarLanche(new ComBaconExtra(new ComCheddar(fabrica.criarLanche(3))));
-        assertEquals(new BigDecimal("48.00"), pedido.calcularTotal());
+        assertEquals(48.00, pedido.calcularTotal(), 0.000001);
         pedido.removerItem(1);
-        assertEquals(new BigDecimal("16.00"), pedido.calcularTotal());
-        assertEquals(new BigDecimal("16.00"), gerenciador.calcularTotalVendido());
+        assertEquals(16.00, pedido.calcularTotal(), 0.000001);
+        assertEquals(16.00, gerenciador.calcularTotalVendido(), 0.000001);
         assertEquals(Set.of("X-Burger"), gerenciador.consultarCombinacoes());
         pedido.removerItem(0);
-        assertEquals(new BigDecimal("0.00"), pedido.calcularTotal());
-        assertEquals(new BigDecimal("0.00"), gerenciador.calcularTotalVendido());
+        assertEquals(0.00, pedido.calcularTotal(), 0.000001);
+        assertEquals(0.00, gerenciador.calcularTotalVendido(), 0.000001);
         assertTrue(gerenciador.consultarCombinacoes().isEmpty());
         assertThrows(IllegalArgumentException.class, () -> pedido.removerItem(0));
         assertThrows(IllegalArgumentException.class, () -> pedido.removerItem(-1));
@@ -97,7 +96,7 @@ class NivelTresTest {
         assertEquals(1, pedido.consultarItens().size());
         assertNotSame(antigo, pedido.consultarItens().get(0));
         assertEquals("X-Burger", antigo.getDescricao());
-        assertEquals(new BigDecimal("18.00"), pedido.calcularTotal());
+        assertEquals(18.00, pedido.calcularTotal(), 0.000001);
     }
 
     @Test
