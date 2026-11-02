@@ -2,6 +2,7 @@ package org.restaurante.cardapio;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.restaurante.util.Validacoes;
 
 public class Lanche implements ItemCardapio {
     private String nome;
@@ -45,10 +46,7 @@ public class Lanche implements ItemCardapio {
     public void setComCebola(boolean comCebola) { this.comCebola = comCebola; }
 
     public void setNome(String nome) {
-        if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Nome do lanche não pode ser vazio.");
-        }
-        this.nome = nome.trim();
+        this.nome = Validacoes.textoNaoVazio(nome, "Nome do lanche");
     }
 
     public void setPreco(BigDecimal preco) {

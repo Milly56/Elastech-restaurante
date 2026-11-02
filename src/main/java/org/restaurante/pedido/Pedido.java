@@ -4,6 +4,7 @@ import org.restaurante.cardapio.ItemCardapio;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import org.restaurante.util.Validacoes;
 
 public class Pedido {
     private final long identificador;
@@ -12,11 +13,8 @@ public class Pedido {
     private boolean cancelado;
 
     public Pedido(long identificador, String cliente) {
-        if (cliente == null || cliente.isBlank()) {
-            throw new IllegalArgumentException("Nome do cliente não pode ser vazio.");
-        }
         this.identificador = identificador;
-        this.cliente = cliente.trim();
+        this.cliente = Validacoes.textoNaoVazio(cliente, "Nome do cliente");
     }
 
     public void adicionarLanche(ItemCardapio item) {

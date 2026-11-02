@@ -3,16 +3,13 @@ package org.restaurante.app;
 import org.restaurante.pedido.Pedido;
 import org.restaurante.cardapio.ItemCardapio;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
+import org.restaurante.util.FormatadorMoeda;
 
 public class MenuConsole {
     private final Scanner entrada = new Scanner(System.in);
-    private final NumberFormat moeda = NumberFormat.getCurrencyInstance(
-            Locale.forLanguageTag("pt-BR"));
 
     public int lerOpcaoPrincipal() {
         exibirMensagem("\n1. Registrar novo pedido\n2. Listar pedidos do dia"
@@ -52,8 +49,9 @@ public class MenuConsole {
     }
 
     public int lerOpcaoLanche() {
-        exibirMensagem("\n1. X-Burger: R$ 16,00\n2. X-Salada: R$ 18,00"
-                + "\n3. X-Bacon: R$ 22,00");
+        exibirMensagem("\n1. X-Burger: " + FormatadorMoeda.formatar(new BigDecimal("16.00"))
+                + "\n2. X-Salada: " + FormatadorMoeda.formatar(new BigDecimal("18.00"))
+                + "\n3. X-Bacon: " + FormatadorMoeda.formatar(new BigDecimal("22.00")));
         return lerOpcao("Escolha o lanche: ", 3);
     }
 
@@ -66,7 +64,8 @@ public class MenuConsole {
     }
 
     public int lerOpcaoAdicional() {
-        exibirMensagem("\n1. Cheddar: R$ 4,00\n2. Bacon extra: R$ 6,00"
+        exibirMensagem("\n1. Cheddar: " + FormatadorMoeda.formatar(new BigDecimal("4.00"))
+                + "\n2. Bacon extra: " + FormatadorMoeda.formatar(new BigDecimal("6.00"))
                 + "\n3. Finalizar lanche sem mais adicionais");
         return lerOpcao("Escolha o adicional: ", 3);
     }
@@ -87,14 +86,14 @@ public class MenuConsole {
                     + " | Cliente: " + pedido.getCliente()
                     + (pedido.isCancelado() ? " | CANCELADO" : " | ATIVO"));
             for (ItemCardapio item : pedido.consultarItens()) {
-                exibirMensagem("  " + item.getDescricao() + " - " + moeda.format(item.getPreco()));
+                exibirMensagem("  " + item.getDescricao() + " - " + FormatadorMoeda.formatar(item.getPreco()));
             }
-            exibirMensagem("Valor do pedido: " + moeda.format(pedido.calcularTotal()));
+            exibirMensagem("Valor do pedido: " + FormatadorMoeda.formatar(pedido.calcularTotal()));
         }
     }
 
     public void exibirTotalDoDia(BigDecimal total) {
-        exibirMensagem("Total do dia: " + moeda.format(total));
+        exibirMensagem("Total do dia: " + FormatadorMoeda.formatar(total));
     }
 
     public void exibirFechamento(BigDecimal total, Set<String> combinacoes) {
